@@ -6,14 +6,16 @@ public record UsuarioResponse (
         Long id,
         String nome,
         String email,
-        String status
+        String status,
+        String role
 ) {
     public UsuarioResponse(Usuario usuario){
         this(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getStatus().toString()
+                usuario.getStatus().toString(),
+                usuario.getRole()
         );
     }
 

@@ -40,18 +40,20 @@ public class Usuario implements UserDetails {
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
-    private Empresa empresa;
+    @JoinColumn(name = "restaurante_id", referencedColumnName = "id")
+    private Restaurante restaurante;
 
 
     public Usuario(UsuarioRequest usuario) {
         var usuarioLogado = getUsuarioLogado();
         this.email =usuario.email();
         this.nome = usuario.nome();
-        this.cpf = new CPF(usuario.cpf());
+        if (usuario.cpf() != null && !usuario.cpf().isBlank()){
+            this.cpf = new CPF(usuario.cpf());
+        }
         this.senha = usuario.senha();
         this.role = "ROLE_USER";
-        this.empresa = usuarioLogado.getEmpresa();
+        this.restaurante = usuarioLogado.getRestaurante();
     }
 
     public Usuario getUsuarioLogado(){
@@ -61,9 +63,22 @@ public class Usuario implements UserDetails {
     public Usuario(UsuarioAdmRequest usuario) {
         this.email =usuario.email();
         this.nome = usuario.nome();
-        this.cpf = new CPF(usuario.cpf());
+        if (usuario.cpf() != null && !usuario.cpf().isBlank()){
+            this.cpf = new CPF(usuario.cpf());
+        }
         this.senha = usuario.senha();
         this.role = "ROLE_ADMIN";
+    }
+
+    public Usuario(UsuarioAdmRequest usuario, Restaurante restaurante) {
+        this.email =usuario.email();
+        this.nome = usuario.nome();
+        if (usuario.cpf() != null && !usuario.cpf().isBlank()){
+            this.cpf = new CPF(usuario.cpf());
+        }
+        this.senha = usuario.senha();
+        this.role = "ROLE_ADMIN";
+        this.restaurante = restaurante;
     }
 
 

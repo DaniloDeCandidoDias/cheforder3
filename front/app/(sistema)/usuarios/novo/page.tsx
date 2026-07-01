@@ -11,21 +11,20 @@ export default function cadastrarUsuario() {
                 href="/usuarios"
                 className="group flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors"
             >
-                <span className="mr-2 transition-transform group-hover:-translate-x-1">←</span>
-                Voltar para listagem
+                <span className="mr-2 transition-transform group-hover:-translate-x-1">&lt;-</span>
+                Voltar para funcionarios
             </Link>
 
             <div className="space-y-1 border-l-4 border-emerald-500 pl-4">
                 <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-                    Novo Usuário
+                    Novo Funcionario
                 </h1>
                 <p className="text-sm text-slate-500">
-                    Preencha os dados para registrar um novo perfil no sistema.
+                    Preencha os dados para cadastrar um funcionario do restaurante.
                 </p>
             </div>
         </div>
 
-        {/* Removido o overflow-hidden para não cortar sombras de foco */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
             <UsuarioForm />
         </div>

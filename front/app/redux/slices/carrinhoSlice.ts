@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const initialState = {
+const initialState: { itens: string[] } = {
     itens: []
 }
 
@@ -9,13 +9,10 @@ const carrinhoSlice = createSlice({
         initialState,
         reducers:{
             addCarrinho : (state, action: PayloadAction<{item: string}>) => {
-
-            
-
+                state.itens.push(action.payload.item);
             },
             removeCarrinho : (state, action: PayloadAction<{item: string}>) => {
-
-                
+                state.itens = state.itens.filter((item) => item !== action.payload.item);
             }
         }
     });

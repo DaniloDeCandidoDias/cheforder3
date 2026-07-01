@@ -14,9 +14,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
 
-          {/* Identificação do Usuário */}
           <div className="flex items-center gap-3">
-            {/* SVG Ícone de Usuário (Padrão W3C) */}
             <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center border border-zinc-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -33,14 +31,13 @@ export default function Header() {
               </svg>
             </div>
             <span className="text-sm font-semibold text-zinc-800 hidden sm:block">
-              {usuario?.nome.toLocaleUpperCase() || 'Usuario indefinido!'}
+              {usuario?.nome.toLocaleUpperCase() || 'Operador indefinido!'}
             </span>
           </div>
 
-          {/* Botão Sair */}
           <button
             type="button"
-            onClick={(e) => {
+            onClick={() => {
               dispatch(logout());
             }
             }
@@ -48,7 +45,6 @@ export default function Header() {
 
           >
             <span>Sair</span>
-            {/* SVG Ícone de LogOut (Padrão W3C) */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

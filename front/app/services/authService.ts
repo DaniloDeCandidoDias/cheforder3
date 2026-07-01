@@ -3,7 +3,7 @@ import api from "./api";
 
 export async function loginService(login:LoginRequest) : Promise<LoginResponse> {
 
-       var loginResult = await api.post<LoginResponse>('http://localhost:8080/auth/login',
+       const loginResult = await api.post<LoginResponse>('/auth/login',
                 login);
 
         return loginResult.data;

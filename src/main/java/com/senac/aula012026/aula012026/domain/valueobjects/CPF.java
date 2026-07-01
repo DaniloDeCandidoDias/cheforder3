@@ -24,7 +24,7 @@ public class CPF {
             return false;
         }
 
-        return validarDigitosVerificadores(cpf);
+        return validarDigitosVerificadores(cpfTratado);
     }
 
     private boolean validarDigitosVerificadores(String cpf){

@@ -28,13 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Liberação de metodos para nao travar o token JWT
+        // Liberacao de metodos publicos para nao travar o token JWT
         if(path.equals("/auth/login")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/webjars")
                 || path.startsWith("/usuarios/adm")
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/v3/api-docs")
+                || path.startsWith("/api/enderecos")
                 || request.getMethod().startsWith("OPTIONS") )
         {
             filterChain.doFilter(request,response);
@@ -46,24 +47,34 @@ public class JwtFilter extends OncePerRequestFilter {
         if(header != null&& header.startsWith("Bearer ")){
             String token = header.replace("Bearer ","");
 
-            //Validar TOken JWT
-            var retornotoken =tokenService.validarToken(token);
+            try {
+                //Validar Token JWT
+                var usuarioLogado  = tokenService.validarToken(token);
 
-            var usuarioLogado  = retornotoken;
+                if (usuarioLogado == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token invalido ou expirado");
+                    return;
+                }
 
-            UsernamePasswordAuthenticationToken usuario = new UsernamePasswordAuthenticationToken(
-                    usuarioLogado,
-                    null,
-                    usuarioLogado.getAuthorities()
-            );
+                UsernamePasswordAuthenticationToken usuario = new UsernamePasswordAuthenticationToken(
+                        usuarioLogado,
+                        null,
+                        usuarioLogado.getAuthorities()
+                );
 
-            SecurityContextHolder.getContext().setAuthentication(usuario);
+                SecurityContextHolder.getContext().setAuthentication(usuario);
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token invalido ou expirado");
+                return;
+            }
 
 
 
         }else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token não informado ou invalido");
+            response.getWriter().write("Token nao informado ou invalido");
             return;
         }
 

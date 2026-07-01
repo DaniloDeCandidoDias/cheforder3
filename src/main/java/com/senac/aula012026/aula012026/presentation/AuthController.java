@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(description = "Serviço responsavel por controlar a autenticação de usuarios e sessão!",name = "Serviço autenticação")
+@Tag(description = "Servico responsavel por controlar a autenticacao do ChefOrder!",name = "Servico autenticacao")
 public class AuthController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class AuthController {
     private UsuarioService usuarioService;
 
     @PostMapping("/login")
-    @Operation(description = "Valida senha asdhaukshd 50 carecteres, calcula longitudo com latitud!",summary = "Login")
+    @Operation(description = "Valida email e senha do operador do restaurante.",summary = "Login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
 

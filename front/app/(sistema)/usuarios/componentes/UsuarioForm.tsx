@@ -1,7 +1,6 @@
 'use client'
 import { atualizar, salvar } from "@/app/services/usuarioService";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react"
@@ -26,28 +25,25 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                 campo === 'email' ? valor : prev.email,
                 prev.status,
                 campo === 'senha' ? valor : prev.senha,
+                prev.role
             )
         )
     }
 
-    const handleSalvar = async (formData: FormData) => {
+    const handleSalvar = async () => {
 
-        debugger;
         if (usuarioExistente) {
-            var dadosResult = await atualizar(usuario);
-            if (dadosResult > 0) {
-                return;
-            }
-            alert(dadosResult);
+            await atualizar(usuario);
+            alert("Funcionario atualizado com sucesso!")
 
         } else {
 
-            var dadosResult = await salvar(usuario)
+            const dadosResult = await salvar(usuario)
 
             if (dadosResult === undefined) {
                 return;
             }
-            alert("Usuário salvo com sucesso! Código:" + dadosResult)
+            alert("Funcionario salvo com sucesso! Codigo:" + dadosResult)
 
         }
 
@@ -59,7 +55,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
         <form action={handleSalvar} className="w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* Campo: Nome (Ocupa 1 coluna no grid) */}
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-semibold text-slate-700">
                         Nome completo
@@ -69,7 +64,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                         required
                         value={usuario.nome}
                         onChange={(e) => handleChange('nome', e.target.value)}
-                        placeholder="João da Silva Sauro"
+                        placeholder="Joao da Silva"
                         className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
                     />
                 </div>
@@ -101,9 +96,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                         className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
                     />
                 </div>
-                {/* Se você adicionar mais campos aqui, eles seguirão o padrão 2x2 automaticamente */}
-
-                {/* Área de Botões - Fazemos ela ocupar as 2 colunas (col-span-full) */}
                 <div className="md:col-span-2 flex items-center justify-end gap-6 pt-6 mt-6 border-t border-slate-100">
                     <Link
                         href="/usuarios"
@@ -115,7 +107,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                         type="submit"
                         className="px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95"
                     >
-                        SALVAR ALTERAÇÕES
+                        SALVAR
                     </button>
                 </div>
             </div>

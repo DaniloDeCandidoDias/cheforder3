@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
-@Tag(name = "Usuarios controller",description = "Controladora responsavel por gerenciar os usuarios!")
+@Tag(name = "Funcionarios controller",description = "Controladora responsavel por gerenciar os funcionarios!")
 public class UsuarioController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class UsuarioController {
 
 
     @GetMapping
-    @Operation(summary = "Listar todos",description = "Método para listar todos os usuários!")
+    @Operation(summary = "Listar todos",description = "Metodo para listar todos os funcionarios!")
     public ResponseEntity<List<UsuarioResponse>> listarTodos(){
 
         var usuarios = usuarioService.ListarTodos();
@@ -34,20 +34,20 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Consulta de usuario por ID", description = "Médoto responsavel por consultar um unico usuario por ID e se não existir retorna null!")
+    @Operation(summary = "Consulta de funcionario por ID", description = "Metodo responsavel por consultar um unico funcionario por ID e se nao existir retorna null!")
     public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(usuarioService.BuscarUsuarioPorId(id));
     }
 
     @PostMapping
-    @Operation(summary = "Criar usuario",description = "Metodo resposavel por criar usuário")
+    @Operation(summary = "Criar funcionario",description = "Metodo resposavel por criar funcionario")
     public ResponseEntity<Long> salvar (@RequestBody UsuarioRequest usuario){
 
         return ResponseEntity.ok(usuarioService.SalvarUsuario(usuario));
     }
 
     @PostMapping("/adm")
-    @Operation(summary = "Criar usuario adm",description = "Metodo resposavel por criar usuário")
+    @Operation(summary = "Criar restaurante",description = "Metodo resposavel por criar o restaurante administrador")
     public ResponseEntity<Long> salvarAdm (@RequestBody UsuarioAdmRequest usuario){
 
         return ResponseEntity.ok(usuarioService.SalvarUsuarioAdm(usuario));
@@ -55,7 +55,7 @@ public class UsuarioController {
 
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar usuario",description = "Metodo resposavel por atualizar usuário")
+    @Operation(summary = "Atualizar funcionario",description = "Metodo resposavel por atualizar funcionario")
     public ResponseEntity<?> alterarUsuario (@PathVariable Long id, @RequestBody UsuarioRequest usuario){
 
         var alterarUsuarioResult = usuarioService.AterarUsuario(id,usuario);
@@ -71,7 +71,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/usuariologado")
-    @Operation(summary = "Consulta usuario logado",description = "busca usuario da sessãoo")
+    @Operation(summary = "Consulta usuario logado",description = "busca operador da sessao")
     public ResponseEntity<UsuarioResponse> buscarUsarioLogado(Authentication authentication){
 
         return ResponseEntity.ok(usuarioService.BuscarUsuarioLogado(authentication));

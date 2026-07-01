@@ -29,11 +29,15 @@ public class SecurityConfiguration {
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-resources/**",
-                        "/v3/api-docs/**")
+                        "/v3/api-docs/**",
+                        "/api/enderecos/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET,"/usuarios",
-                                "/ong").hasRole("ADMIN")
-                        .requestMatchers("/pets").hasRole("ADMIN_ONG")
+                        .requestMatchers("/usuarios/usuariologado").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/*/AlterarStatus").hasRole("ADMIN")
+                        .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/mesas/**",
+                                "/produtos/**",
+                                "/pedidos/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

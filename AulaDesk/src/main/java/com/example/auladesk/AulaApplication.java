@@ -12,7 +12,7 @@ public class AulaApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AulaApplication.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        stage.setTitle("AulaDesk!");
+        stage.setTitle("ChefOrder Desk");
         stage.setScene(scene);
         stage.show();
     }

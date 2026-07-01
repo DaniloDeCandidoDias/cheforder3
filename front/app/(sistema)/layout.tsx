@@ -1,10 +1,10 @@
 'use client'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
-import { RootState, store } from "../redux/store";
+import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 
 export default function SistemaLayout({ children }:
@@ -12,21 +12,35 @@ export default function SistemaLayout({ children }:
 
   const usuario = useSelector((state :RootState) => state.auth.usuario);
   const router = useRouter();
+  const pathname = usePathname();
+  const [montado, setMontado] = useState(false);
+  const rotaFuncionarios = pathname === "/usuarios" || pathname.startsWith("/usuarios/");
+  const podeAcessarFuncionarios = usuario?.role === "ROLE_ADMIN";
 
   useEffect(() => {
-    if (usuario == null) {
+    const timer = window.setTimeout(() => setMontado(true), 0);
+    return () => window.clearTimeout(timer);
+  }, [])
 
+  useEffect(() => {
+    if (montado && usuario == null) {
       router.push("/login")
     }
-  })
+  }, [montado, router, usuario])
 
-  if (usuario == null) return null;
+  useEffect(() => {
+    if (montado && usuario != null && rotaFuncionarios && !podeAcessarFuncionarios) {
+      router.push("/home")
+    }
+  }, [montado, podeAcessarFuncionarios, rotaFuncionarios, router, usuario])
+
+  if (!montado || usuario == null) return null;
+  if (rotaFuncionarios && !podeAcessarFuncionarios) return null;
 
   return (
-    <div className="flex ">
+    <div className="flex">
       <Sidebar />
 
-      {/* Ocupa o restante do espaço horizontal e empilha V verticalmente */}
       <div className="flex flex-col flex-1 min-w-0">
         <Header />
 

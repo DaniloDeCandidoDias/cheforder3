@@ -5,9 +5,7 @@ export default function Footer(){
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           
-          {/* Texto de Copyright e Identidade */}
           <div className="flex items-center gap-2 text-sm text-zinc-500">
-            {/* Ícone W3C SVG: Copyright/Info */}
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               viewBox="0 0 24 24" 
@@ -23,12 +21,11 @@ export default function Footer(){
               <path d="M12 8h.01" />
             </svg>
             <p>
-              &copy; {currentYear} <span className="font-semibold text-zinc-700">Alunão</span>. 
+              &copy; {currentYear} <span className="font-semibold text-zinc-700">ChefOrder</span>. 
               Todos os direitos reservados.
             </p>
           </div>
 
-          {/* Links de Navegação */}
           <div className="flex items-center gap-8">
             <a 
               href="#" 

@@ -1,24 +1,27 @@
 package com.senac.aula012026.aula012026.application.services;
 
 import com.senac.aula012026.aula012026.application.DTO.*;
+import com.senac.aula012026.aula012026.domain.entities.Restaurante;
 import com.senac.aula012026.aula012026.domain.entities.Usuario;
+import com.senac.aula012026.aula012026.domain.repository.RestauranteRepository;
 import com.senac.aula012026.aula012026.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
     @Value("${spring.secretkey}")
     private String secret;
@@ -27,7 +30,7 @@ public class UsuarioService {
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest) {
         try {
 
-            return usuarioRepository.existsUsuarioByEmailContainingAndSenha(loginRequest.email(), loginRequest.senha());
+            return usuarioRepository.existsUsuarioByEmailAndSenha(loginRequest.email(), loginRequest.senha());
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -39,18 +42,16 @@ public class UsuarioService {
         try{
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            var empresa = usuarioLogado.getEmpresa();
+            var restaurante = usuarioLogado.getRestaurante();
 
-            return usuarioRepository.getUsuariosByEmpresa_Id(empresa.getId())
+            if (restaurante == null){
+                return List.of();
+            }
+
+            return usuarioRepository.getUsuariosByRestaurante_Id(restaurante.getId())
                     .stream()
                     .map(UsuarioResponse::new)
                     .collect(Collectors.toList());
-
-//            return usuarioRepository.findAll()
-//                    .stream()
-//                    .filter(a-> a.getEmpresa().getId().equals(empresa.getId()))
-//                    .map(UsuarioResponse::new)
-//                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +74,14 @@ public class UsuarioService {
 
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-           var usuario = usuarioRepository.findByIdAndEmpresa_Id(id,usuarioLogado.getEmpresa().getId()).orElse(null);
+            if(usuarioLogado.getRestaurante() == null){
+                return null;
+            }
+
+           var usuario = usuarioRepository.findByIdAndRestaurante_Id(id,usuarioLogado.getRestaurante().getId()).orElse(null);
+           if(usuario == null){
+               return null;
+           }
            return new UsuarioResponse(usuario);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -83,7 +91,13 @@ public class UsuarioService {
 
     public boolean AterarUsuario(Long id, UsuarioRequest usuario) {
 
-        var usuarioBanco = usuarioRepository.findById(id).orElse(null);
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(usuarioLogado.getRestaurante() == null){
+            return false;
+        }
+
+        var usuarioBanco = usuarioRepository.findByIdAndRestaurante_Id(id,usuarioLogado.getRestaurante().getId()).orElse(null);
 
         if (usuarioBanco != null){
             usuarioBanco.setEmail(usuario.email());
@@ -101,7 +115,13 @@ public class UsuarioService {
 
     public Long SalvarUsuario(UsuarioRequest usuario) {
         try {
-            return usuarioRepository.save(new Usuario(usuario)).getId();
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(usuarioLogado.getRestaurante() == null){
+                return 0L;
+            }
+            Usuario novoUsuario = new Usuario(usuario);
+            novoUsuario.setRestaurante(usuarioLogado.getRestaurante());
+            return usuarioRepository.save(novoUsuario).getId();
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -111,8 +131,9 @@ public class UsuarioService {
     public Long SalvarUsuarioAdm(UsuarioAdmRequest usuario) {
         try {
 
-            if(usuario.secretKey().equals( secret)) {
-                return usuarioRepository.save(new Usuario(usuario)).getId();
+            if(secret.equals(usuario.secretKey())) {
+                Restaurante restaurante = restauranteRepository.save(new Restaurante(usuario));
+                return usuarioRepository.save(new Usuario(usuario, restaurante)).getId();
             }else
             {
                 return 0L;
@@ -126,7 +147,13 @@ public class UsuarioService {
 
     public boolean AlterarStatus(Long id, AlterarStatusRequest statusRequest) {
 
-        var usuarioBanco = usuarioRepository.findById(id).orElse(null);
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(usuarioLogado.getRestaurante() == null || !"ROLE_ADMIN".equals(usuarioLogado.getRole())){
+            return false;
+        }
+
+        var usuarioBanco = usuarioRepository.findByIdAndRestaurante_Id(id,usuarioLogado.getRestaurante().getId()).orElse(null);
 
         if (usuarioBanco != null){
 

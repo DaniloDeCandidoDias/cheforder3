@@ -5,6 +5,13 @@ public record UsuarioAdmRequest(
         String email,
         String senha,
         String secretKey,
-        String cpf
+        String cpf,
+        String cep,
+        String logradouro,
+        String numero,
+        String bairro,
+        String cidade,
+        String estado,
+        String complemento
 ) {
 }

@@ -3,15 +3,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.auladesk.UsuarioController">
+<AnchorPane prefHeight="540.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.auladesk.UsuarioController">
    <children>
-      <Label layoutX="94.0" layoutY="60.0" text="Nome" />
+      <Label layoutX="94.0" layoutY="60.0" text="Nome fantasia" />
       <TextField fx:id="txtNome" layoutX="151.0" layoutY="56.0" />
       <Label layoutX="94.0" layoutY="103.0" text="Email" />
       <TextField fx:id="txtEmail" layoutX="151.0" layoutY="99.0" />
       <Label layoutX="94.0" layoutY="147.0" text="Senha" />
       <PasswordField fx:id="txtSenha" layoutX="151.0" layoutY="143.0" />
-      <Button onAction="#onVoltarButtonClick" layoutX="60.0" layoutY="329.0" mnemonicParsing="false" text="Voltar" />
-      <Button onAction="#onSalvarButtonClick" layoutX="454.0" layoutY="329.0" mnemonicParsing="false" text="Salvar" />
+      <Label layoutX="94.0" layoutY="190.0" text="CPF responsavel" />
+      <TextField fx:id="txtCpf" layoutX="151.0" layoutY="186.0" />
+      <Label layoutX="94.0" layoutY="234.0" text="CEP" />
+      <TextField fx:id="txtCep" layoutX="151.0" layoutY="230.0" />
+      <Button onAction="#onBuscarCepButtonClick" layoutX="408.0" layoutY="228.0" mnemonicParsing="false" text="Buscar CEP" />
+      <Label layoutX="94.0" layoutY="273.0" text="Logradouro" />
+      <TextField fx:id="txtLogradouro" layoutX="179.0" layoutY="269.0" prefWidth="375.0" />
+      <Label layoutX="94.0" layoutY="313.0" text="Numero" />
+      <TextField fx:id="txtNumero" layoutX="151.0" layoutY="309.0" prefWidth="80.0" />
+      <Label layoutX="262.0" layoutY="313.0" text="Complemento" />
+      <TextField fx:id="txtComplemento" layoutX="361.0" layoutY="309.0" prefWidth="193.0" />
+      <Label layoutX="94.0" layoutY="353.0" text="Bairro" />
+      <TextField fx:id="txtBairro" layoutX="151.0" layoutY="349.0" />
+      <Label layoutX="320.0" layoutY="353.0" text="Cidade" />
+      <TextField fx:id="txtCidade" layoutX="380.0" layoutY="349.0" />
+      <Label layoutX="94.0" layoutY="393.0" text="UF" />
+      <TextField fx:id="txtUf" layoutX="151.0" layoutY="389.0" prefWidth="80.0" />
+      <Button onAction="#onVoltarButtonClick" layoutX="60.0" layoutY="459.0" mnemonicParsing="false" text="Voltar" />
+      <Button onAction="#onSalvarButtonClick" layoutX="454.0" layoutY="459.0" mnemonicParsing="false" text="Salvar" />
    </children>
 </AnchorPane>

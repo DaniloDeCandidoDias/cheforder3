@@ -25,7 +25,7 @@ public class LoginController {
 
         if (txtLogin.getText().equals("admin")
                 && txtSenha.getText().equals("12345")){
-            showMenssage("Login efetuado com o email!", Alert.AlertType.INFORMATION);
+            showMenssage("Login efetuado com sucesso!", Alert.AlertType.INFORMATION);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
             Scene scene = new Scene(loader.load());
@@ -33,7 +33,7 @@ public class LoginController {
             stage.setScene(scene);
 
         }else {
-            showMenssage("Usuário e senha invalido!", Alert.AlertType.ERROR);
+            showMenssage("Login e senha invalidos!", Alert.AlertType.ERROR);
         }
     }
 

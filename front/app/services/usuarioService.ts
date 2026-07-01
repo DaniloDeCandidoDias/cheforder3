@@ -13,8 +13,8 @@ export async function buscarListaUsuarios(): Promise<Usuario[]> {
     return [];
 }
 export async function atualizar(usuarioExistente : Usuario): Promise<number> {
-    var dadosResult = await api
-            .put<number>('http://localhost:8080/usuarios/'+usuarioExistente.id, usuarioExistente);
+    const dadosResult = await api
+            .put<number>('/usuarios/'+usuarioExistente.id, usuarioExistente);
           
     return dadosResult.data;
     
@@ -22,24 +22,21 @@ export async function atualizar(usuarioExistente : Usuario): Promise<number> {
 
 export async function salvar(usuario:Usuario) : Promise<number>{
 
-       var dadosResult = await api.post<number>('http://localhost:8080/usuarios', usuario);
+       const dadosResult = await api.post<number>('/usuarios', usuario);
 
         return dadosResult.data;
 }
 export async function buscarPorId(codigo:number): Promise<Usuario> {
-    return (await api.get<Usuario>('http://localhost:8080/usuarios/'+codigo)).data
+    return (await api.get<Usuario>('/usuarios/'+codigo)).data
 }
 
 export async function alterarStatusUsuario(usuario: Usuario): Promise<void> {
 
-    var novoStatus = {};
-    if (usuario.status === "ATIVO") {
-        novoStatus = { status: "INATIVO" };
-    } else {
-        novoStatus = { status: "ATIVO" };
-    }
+    const novoStatus = usuario.status === "ATIVO"
+        ? { status: "INATIVO" }
+        : { status: "ATIVO" };
 
-    var dadosResult = await api
+    const dadosResult = await api
         .put<number>('/usuarios/' + usuario.id + '/AlterarStatus', novoStatus);
 
     if (dadosResult.status !== 200) {
@@ -48,6 +45,6 @@ export async function alterarStatusUsuario(usuario: Usuario): Promise<void> {
 }
 
 export async function  buscarUsuarioLogado() : Promise<Usuario> {
-     return (await api.get<Usuario>('http://localhost:8080/usuarios/usuariologado')).data;
+     return (await api.get<Usuario>('/usuarios/usuariologado')).data;
 }
 

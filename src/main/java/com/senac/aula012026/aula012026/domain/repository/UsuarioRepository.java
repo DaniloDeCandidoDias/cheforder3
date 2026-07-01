@@ -11,9 +11,11 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
 
-     Optional<Usuario> findByIdAndEmpresa_Id(Long id, Long empresaId);
+     Optional<Usuario> findByIdAndRestaurante_Id(Long id, Long restauranteId);
 
-     List<Usuario> getUsuariosByEmpresa_Id(Long empresa);
+     List<Usuario> getUsuariosByRestaurante_Id(Long restaurante);
 
-     boolean existsUsuarioByEmailContainingAndSenha(String email, String senha);
+     Optional<Usuario> findFirstByEmail(String email);
+
+     boolean existsUsuarioByEmailAndSenha(String email, String senha);
 }

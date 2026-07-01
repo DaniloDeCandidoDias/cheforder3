@@ -1,8 +1,6 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { Usuario } from "../types/usuarios";
-import { LoginResponse,LoginRequest } from "../types/auth";
 import { useDispatch } from "react-redux";
 import { loginService } from "../services/authService";
 import {  setToken, setUsuario } from "../redux/slices/authSlice";
@@ -20,12 +18,11 @@ export default function LoginPage() {
         try {
 
             const loginResult = await loginService({email:email,senha:senha});
-            debugger;
             if (!loginResult.token) {
-                alert("Usuario ou senha invalido!")
+                alert("Email ou senha invalido!")
                 return;
             }
-            var token = loginResult.token;
+            const token = loginResult.token;
             
            
             dispatch(setToken(
@@ -41,15 +38,11 @@ export default function LoginPage() {
                 }
             ));
 
+            router.push("/home")
 
-        } catch (error) {
-            alert("Erro ao entrar no sistema!")
+        } catch {
+            alert("Erro ao entrar no ChefOrder!")
         }
-
-
-        console.log(`autenticado com email: ${email}`)
-
-        router.push("/home")
     }
 
 
@@ -60,7 +53,7 @@ export default function LoginPage() {
 
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-                        Entrar no Sistema
+                        Entrar no ChefOrder
                     </h1>
                 </div>
 
@@ -73,7 +66,7 @@ export default function LoginPage() {
                         <input
                             name="email"
                             type="email"
-                            placeholder="seu@email.com"
+                            placeholder="restaurante@email.com"
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400"
                         />
                     </div>
@@ -87,7 +80,7 @@ export default function LoginPage() {
                         <input
                             name="senha"
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="********"
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         />
                     </div>

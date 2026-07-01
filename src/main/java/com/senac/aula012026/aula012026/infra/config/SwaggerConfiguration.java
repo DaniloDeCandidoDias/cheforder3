@@ -22,9 +22,9 @@ public class SwaggerConfiguration {
                                 .bearerFormat("JWT")
                         ))
                 .info( new Info()
-                .title("API Aula Full Stack")
+                .title("API ChefOrder")
                 .version("1.0")
-                .description("Api responsavel por passar o conhecimento aos academicos!")
+                .description("Api responsavel por gerenciar restaurantes, mesas, cardapio e pedidos.")
                 .termsOfService("https://www.mtxsistemas.com")
         );
     }
