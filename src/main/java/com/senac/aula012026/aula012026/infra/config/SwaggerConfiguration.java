@@ -25,7 +25,7 @@ public class SwaggerConfiguration {
                 .title("API ChefOrder")
                 .version("1.0")
                 .description("Api responsavel por gerenciar restaurantes, mesas, cardapio e pedidos.")
-                .termsOfService("https://www.mtxsistemas.com")
+                .termsOfService("https://www.cursoemvideo.com")
         );
     }
 

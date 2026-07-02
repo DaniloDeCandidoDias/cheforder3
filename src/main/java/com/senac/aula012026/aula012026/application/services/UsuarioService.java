@@ -1,6 +1,7 @@
 package com.senac.aula012026.aula012026.application.services;
 
 import com.senac.aula012026.aula012026.application.DTO.*;
+import com.senac.aula012026.aula012026.domain.enuns.EnumStatusUsuario;
 import com.senac.aula012026.aula012026.domain.entities.Restaurante;
 import com.senac.aula012026.aula012026.domain.entities.Usuario;
 import com.senac.aula012026.aula012026.domain.repository.RestauranteRepository;
@@ -30,7 +31,11 @@ public class UsuarioService {
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest) {
         try {
 
-            return usuarioRepository.existsUsuarioByEmailAndSenha(loginRequest.email(), loginRequest.senha());
+            return usuarioRepository.existsUsuarioByEmailAndSenhaAndStatus(
+                    loginRequest.email(),
+                    loginRequest.senha(),
+                    EnumStatusUsuario.ATIVO
+            );
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -6,6 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.senac.aula012026.aula012026.domain.entities.Token;
 import com.senac.aula012026.aula012026.domain.entities.Usuario;
+import com.senac.aula012026.aula012026.domain.enuns.EnumStatusUsuario;
 import com.senac.aula012026.aula012026.domain.repository.TokenRepository;
 import com.senac.aula012026.aula012026.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,13 @@ public class TokenService {
             verifier.verify(token);
 
             var tokenBanco = tokenRepository.findTokenByToken(token);
+            var usuario = tokenBanco.orElseThrow().getUsuario();
 
-            return tokenBanco.get().getUsuario();
+            if (usuario == null || usuario.getStatus() != EnumStatusUsuario.ATIVO) {
+                return null;
+            }
+
+            return usuario;
 
         } catch (Exception e) {
             throw new RuntimeException(e);

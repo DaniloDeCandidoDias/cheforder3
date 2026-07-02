@@ -1,5 +1,6 @@
 'use client'
 import axios, { AxiosHeaders } from "axios";
+import Cookies from "js-cookie";
 import { store } from "../redux/store";
 import { logout } from "../redux/slices/authSlice";
 
@@ -9,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = store.getState().auth.token;
+        const token = Cookies.get('token') ?? store.getState().auth.token;
 
         if (token) {
             const headers = config.headers ?? new AxiosHeaders();
