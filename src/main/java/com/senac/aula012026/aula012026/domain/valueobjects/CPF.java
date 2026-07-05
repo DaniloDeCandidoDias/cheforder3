@@ -38,10 +38,6 @@ public class CPF {
         return true;
     }
 
-    private String getNumeros(){
-        return this.cpf.replaceAll("[^0-9]","");
-    }
-
     @Override
     public String toString()
     {

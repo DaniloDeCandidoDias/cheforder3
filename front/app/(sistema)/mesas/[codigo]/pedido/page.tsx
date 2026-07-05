@@ -2,12 +2,14 @@
 import { buscarMesaPorId } from "@/app/services/mesaService";
 import { buscarPedidoAbertoPorMesa, fecharPedido, lancarProdutosPedido } from "@/app/services/pedidoService";
 import { buscarListaProdutos } from "@/app/services/produtoService";
-import { Mesa } from "@/app/types/mesas";
 import { Pedido } from "@/app/types/pedidos";
 import { Produto } from "@/app/types/produtos";
+import { RootState } from "@/app/redux/store";
+import { alterarQuantidadeCarrinho, limparCarrinho, setCarrinhoPedido, setSalvandoCarrinho } from "@/app/redux/slices/carrinhoSlice";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const montarQuantidadesPedido = (pedidoAberto: Pedido | null) => {
     const novasQuantidades: Record<number, number> = {};
@@ -33,13 +35,14 @@ export default function LancarPedidoMesa(){
 
     const params = useParams()
     const router = useRouter()
+    const dispatch = useDispatch();
     const codigo = Number(params.codigo);
 
-    const [mesa,setMesa] = useState<Mesa|null>(null);
     const [produtos,setProdutos] = useState<Produto[]>([]);
-    const [pedido,setPedido] = useState<Pedido|null>(null);
-    const [quantidades,setQuantidades] = useState<Record<number, number>>({});
-    const [salvando,setSalvando] = useState(false);
+    const mesa = useSelector((state: RootState) => state.carrinho.mesa);
+    const pedido = useSelector((state: RootState) => state.carrinho.pedido);
+    const quantidades = useSelector((state: RootState) => state.carrinho.quantidades);
+    const salvando = useSelector((state: RootState) => state.carrinho.salvando);
 
     const carregarDados = useCallback(async ()=>{
         try {
@@ -52,33 +55,29 @@ export default function LancarPedidoMesa(){
                 return;
             }
 
-            setMesa(mesaResult)
             setProdutos(produtosResult)
-            setPedido(pedidoAberto)
-            setQuantidades(montarQuantidadesPedido(pedidoAberto))
+            dispatch(setCarrinhoPedido({
+                mesa: mesaResult,
+                pedido: pedidoAberto,
+                quantidades: montarQuantidadesPedido(pedidoAberto)
+            }))
         } catch (error) {
             alert("Erro ao carregar dados da mesa!")
             console.error(error)
         }
-    }, [codigo, router]);
+    }, [codigo, dispatch, router]);
 
     useEffect(()=>
     {
         carregarDados();
-    },[carregarDados]);
+
+        return () => {
+            dispatch(limparCarrinho())
+        }
+    },[carregarDados, dispatch]);
 
     const alterarQuantidade = (produtoId: number, quantidade: number) => {
-        setQuantidades((prev) => {
-            const novasQuantidades = { ...prev };
-
-            if(quantidade <= 0){
-                delete novasQuantidades[produtoId];
-                return novasQuantidades;
-            }
-
-            novasQuantidades[produtoId] = quantidade;
-            return novasQuantidades;
-        })
+        dispatch(alterarQuantidadeCarrinho({produtoId, quantidade}))
     }
 
     const handleSalvar = async () => {
@@ -90,7 +89,7 @@ export default function LancarPedidoMesa(){
         }
 
         try {
-            setSalvando(true);
+            dispatch(setSalvandoCarrinho({salvando: true}));
             await lancarProdutosPedido({
                 mesaId: codigo,
                 itens,
@@ -103,7 +102,7 @@ export default function LancarPedidoMesa(){
             alert("Erro ao lancar produtos!")
             console.error(error)
         } finally {
-            setSalvando(false);
+            dispatch(setSalvandoCarrinho({salvando: false}));
         }
     }
 
@@ -121,7 +120,7 @@ export default function LancarPedidoMesa(){
         }
 
         try {
-            setSalvando(true);
+            dispatch(setSalvandoCarrinho({salvando: true}));
             const pedidoId = await lancarProdutosPedido({
                 mesaId: codigo,
                 itens,
@@ -130,12 +129,13 @@ export default function LancarPedidoMesa(){
 
             await fecharPedido(pedidoId)
             alert("Conta fechada com sucesso!")
+            dispatch(limparCarrinho())
             router.push("/mesas")
         } catch (error) {
             alert("Erro ao fechar conta!")
             console.error(error)
         } finally {
-            setSalvando(false);
+            dispatch(setSalvandoCarrinho({salvando: false}));
         }
     }
 

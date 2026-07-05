@@ -10,6 +10,7 @@ import com.senac.aula012026.aula012026.domain.enuns.EnumStatusPedido;
 import com.senac.aula012026.aula012026.domain.repository.MesaRepository;
 import com.senac.aula012026.aula012026.domain.repository.PedidoRepository;
 import com.senac.aula012026.aula012026.domain.repository.ProdutoRepository;
+import com.senac.aula012026.aula012026.domain.valueobjects.QuantidadeItemPedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -266,7 +267,7 @@ public class PedidoService {
         if(pedido.itens() != null && !pedido.itens().isEmpty()){
             pedido.itens().forEach(item -> {
                 if(item.produtoId() != null){
-                    Integer quantidade = item.quantidade() == null || item.quantidade() < 1 ? 1 : item.quantidade();
+                    Integer quantidade = new QuantidadeItemPedido(item.quantidade()).getValor();
                     quantidades.merge(item.produtoId(), quantidade, Integer::sum);
                 }
             });
@@ -277,7 +278,7 @@ public class PedidoService {
         if(pedido.produtosIds() != null){
             pedido.produtosIds().forEach(produtoId -> {
                 if(produtoId != null){
-                    quantidades.merge(produtoId, 1, Integer::sum);
+                    quantidades.merge(produtoId, new QuantidadeItemPedido().getValor(), Integer::sum);
                 }
             });
         }

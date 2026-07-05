@@ -1,21 +1,49 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Mesa } from "@/app/types/mesas";
+import { Pedido } from "@/app/types/pedidos";
 
-const initialState: { itens: string[] } = {
-    itens: []
+interface CarrinhoState {
+    mesa: Mesa | null;
+    pedido: Pedido | null;
+    quantidades: Record<number, number>;
+    salvando: boolean;
+}
+
+const initialState: CarrinhoState = {
+    mesa: null,
+    pedido: null,
+    quantidades: {},
+    salvando: false
 }
 
 const carrinhoSlice = createSlice({
         name:'carrinho',
         initialState,
         reducers:{
-            addCarrinho : (state, action: PayloadAction<{item: string}>) => {
-                state.itens.push(action.payload.item);
+            setCarrinhoPedido : (state, action: PayloadAction<{mesa: Mesa, pedido: Pedido | null, quantidades: Record<number, number>}>) => {
+                state.mesa = action.payload.mesa;
+                state.pedido = action.payload.pedido;
+                state.quantidades = action.payload.quantidades;
             },
-            removeCarrinho : (state, action: PayloadAction<{item: string}>) => {
-                state.itens = state.itens.filter((item) => item !== action.payload.item);
+            alterarQuantidadeCarrinho : (state, action: PayloadAction<{produtoId: number, quantidade: number}>) => {
+                if(action.payload.quantidade <= 0){
+                    delete state.quantidades[action.payload.produtoId];
+                    return;
+                }
+
+                state.quantidades[action.payload.produtoId] = action.payload.quantidade;
+            },
+            setSalvandoCarrinho : (state, action: PayloadAction<{salvando: boolean}>) => {
+                state.salvando = action.payload.salvando;
+            },
+            limparCarrinho : (state) => {
+                state.mesa = null;
+                state.pedido = null;
+                state.quantidades = {};
+                state.salvando = false;
             }
         }
     });
 
-    export const { addCarrinho, removeCarrinho } = carrinhoSlice.actions;
+    export const { setCarrinhoPedido, alterarQuantidadeCarrinho, setSalvandoCarrinho, limparCarrinho } = carrinhoSlice.actions;
     export default carrinhoSlice.reducer;
